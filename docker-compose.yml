@@ -1,0 +1,149 @@
+version: "3.7"
+services:
+  # minio-image:
+  #     container_name: minio-image
+  #     build:
+  #         context: ./dockerfile_minio
+  #     restart: always
+  #     working_dir: "/minio-image/storage"
+  #     volumes:
+  #         - ${WD}/minio/storage:/minio-image/storage
+  #     ports:
+  #         - "9000:9000"
+  #         - "9001:9001"
+  #     environment:
+  #         MINIO_ACCESS_KEY: minio-image
+  #         MINIO_SECRET_KEY: minio-image-pass
+  #     command: server /minio-image/storage --console-address ":9001"
+
+  # mlflow-image:
+  #     container_name: "mlflow-image"
+  #     build:
+  #         context: ./dockerfile_mlflowserver
+  #     working_dir: "/mlflow-image"
+  #     volumes:
+  #         - ${WD}/mlflow:/mlflow-image
+  #     environment:
+  #         MLFLOW_S3_ENDPOINT_URL: http://minio-image:9000
+  #         AWS_ACCESS_KEY_ID: minio-image
+  #         AWS_SECRET_ACCESS_KEY: minio-image-pass
+  #     ports:
+  #         - "5500:5500"
+  #     command: mlflow server --host 0.0.0.0 --port 5500 --backend-store-uri
+  #         /mlflow-image/mlruns
+
+  # algo_found-image:
+  #     container_name: "algo_found-image"
+  #     build:
+  #         context: ./dockerfile_algofund
+  #     image: "algofund0.2.7"
+  #     volumes:
+  #         - ${WD}/notebooks:/mnt/work
+  #         - ${WD}/q_pack:/mnt/work/q_pack
+  #         - ${WD}/mlflow:/mlflow-image
+  #     environment:
+  #         MLFLOW_S3_ENDPOINT_URL: http://minio-image:9000
+  #         AWS_ACCESS_KEY_ID: minio-image
+  #         AWS_SECRET_ACCESS_KEY: minio-image-pass
+  #         MLFLOW_TRACKING_URI: http://mlflow-image:5500
+  #     ports:
+  #         - "9999:80"
+  #         - "8888:8888"
+  #         - "8282:8282"
+  #         - "8181:8181"
+  #         - "8383:8383"
+  #         - "5903:5901"
+  #     # command: tail -F anything
+  #     command: bash -c "/root/run_codeservers.sh & tail -F anything"
+  # command: bash -c "/home/jovyan/run_codeservers.sh & jupyter notebook --no-browser --NotebookApp.token='' --NotebookApp.password='' --allow-root"
+
+  # redis:
+  #     image: redis
+  #     restart: always
+  #     volumes:
+  #         - redis:/data
+
+  # superset:
+  #     container_name: "superset"
+  #     build:
+  #         context: ./dockerfile_superset
+  #     restart: always
+  #     depends_on:
+  #         - redis
+  #     environment:
+  #         MAPBOX_API_KEY: ${MAPBOX_API_KEY}
+  #         SUPERSET_HOME: /etc/superset
+  #     ports:
+  #         - "8088:8088"
+  #     volumes:
+  #         - ${WD}/superset/superset.db:/var/lib/superset/superset.db
+  #         - ${WD}/superset/superset_config.py:/etc/superset/superset_config.py
+
+  main_telebot:
+    image: python:3.8.12-buster
+    build:
+      context: ./dockerfile_telebot
+    restart: always
+    container_name: "main_telebot"
+    volumes:
+      # - ${WD}/postgress_db/scripts/:/docker-entrypoint-initdb.d/
+      - ${WD}:/root
+    links:
+      - postgres_telebot
+    working_dir: /root
+    command: bash -c "python3 bot.py --config "config_docker.json" && tail -F anything"
+
+  postgres_telebot:
+    image: postgres
+    restart: always
+    container_name: "my_postgres"
+    environment:
+      - POSTGRES_USER=guinmoon
+      - POSTGRES_PASSWORD=moysohn7
+      - POSTGRES_DB=telebot
+      - PGDATA=/tmp
+    ports:
+      - 5433:5432
+    volumes:
+      # - ${WD}/postgress_db/scripts/:/docker-entrypoint-initdb.d/
+      - /Users/guinmoon/dev/telebot/storage/pg_admin:/tmp
+  # postgres:
+  #     image: postgres
+  #     container_name: "airflow_postgres"
+  #     environment:
+  #         - POSTGRES_USER=airflow
+  #         - POSTGRES_PASSWORD=airflow
+  #         - POSTGRES_DB=airflow
+  #     ports:
+  #         - 5433:5432
+  #     volumes:
+  #         - pg_data_airflow:/var/lib/postgresql/data
+  # airflow:
+  #     image: airflow_binance_fix1
+  #     container_name: "airflow_binance"
+  #     build:
+  #         context: ./dockerfile_airflow
+  #     restart: always
+  #     depends_on:
+  #         - postgres
+  #     environment:
+  #         - LOAD_EX=n
+  #         - EXECUTOR=Local
+  #         - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+  #     volumes:
+  #         - ${WD}/airflow/dags:/usr/local/airflow/dags
+  #         - ${WD}/q_pack:/usr/local/airflow/dags/q_pack
+  #     ports:
+  #         - 8080:8080
+  #     command: webserver
+
+volumes:
+  tmp:
+    external: false
+    name: tmp
+  # pg_data_airflow:
+  #   external: false
+  #   name: pg_data_airflow
+  # redis:
+  #   external: false
+  #   name: redis

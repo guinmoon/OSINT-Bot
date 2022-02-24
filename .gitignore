@@ -1,0 +1,10 @@
+__pycache__/
+dump/
+versions/
+config.json
+config_docker.json
+human_check.txt
+info.txt
+report.txt
+vk_queries.py
+ok_tools/auths.json

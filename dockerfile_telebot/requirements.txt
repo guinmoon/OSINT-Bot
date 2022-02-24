@@ -1,0 +1,11 @@
+pysocks
+sqlalchemy
+lxml
+setproctitle
+vk_api
+telegram
+stem
+python-telegram-bot
+pyyaml
+Crypto
+psycopg2-binary
