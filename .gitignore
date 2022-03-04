@@ -13,3 +13,4 @@ vk_queries.py
 ok_tools/auths.json
 reports/
 venv/
+storage/pg_data/

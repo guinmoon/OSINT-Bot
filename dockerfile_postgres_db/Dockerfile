@@ -1,0 +1,4 @@
+FROM postgres
+
+USER root
+
