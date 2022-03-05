@@ -17,7 +17,7 @@ def check_rus_num(num):
     return True
 
 
-in_file = '/Users/guinmoon/Documents/dev_cloud/cerebro_telebot/insert_tools/KBR_phones.txt'
+in_file = 'insert_tool/vk_insert.txt'
 
 
 if __name__ == '__main__':
