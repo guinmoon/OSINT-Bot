@@ -5,8 +5,8 @@
 ## Docker
 Бот возможно запускать использую Docker
 Необходимо создать файл config_docker.json, пример файла docker_config_sample.json
-первый запуск: docker-compose -up -d build
-последующие запуски: docker-compose -up
+первый запуск: `docker-compose up -d --build`
+последующие запуски: `docker-compose up`
 
 ## Отладка в Visual Studio Code
 В репозитории присутсвует директория .vscode с настройками для запуска
