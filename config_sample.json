@@ -7,7 +7,7 @@
         "db_user": "user from compose",
         "db_password": "password from compose",
         "db_port": 5433,
-        "bot_token": "5268778142:AAEGVBkzPJ85KSThJ7fCTOEVCvRZoe5ueqk",
+        "bot_token": "******:********",
         "use_vk": false,
         "vk_user_name": "+38066*******",
         "vk_password": "Pass",
