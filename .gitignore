@@ -15,3 +15,5 @@ reports/
 venv/
 storage/pg_data/
 my_insert_tool/
+ok_toolss/
+econ_api_hidden.py

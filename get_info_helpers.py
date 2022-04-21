@@ -3,7 +3,7 @@ from telegram.utils import helpers
 import os
 import requests
 
-import econ_api
+import econ_api_hidden
 import NumbusterAPI
 
 # import postgres_helper
@@ -112,7 +112,7 @@ def get_telegram_info_by_nick(nick, connection):
 
 def get_info_by_phone_facebook(phone):
     # uid='173004422'
-    pretty_info = econ_api.facebook_by_phone(phone)
+    pretty_info = econ_api_hidden.facebook_by_phone(phone)
     pretty_info = '📞EYECon Запрос\n'+parse_eyecon(str(pretty_info))
     info = {"parse_mode": "MarkdownV2", "info": pretty_info}
     info["info"] = helpers.escape_markdown(info["info"], version=2)
